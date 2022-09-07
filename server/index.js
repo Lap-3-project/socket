@@ -19,7 +19,7 @@ const io = new Server(server, {         //Server = {Class} therefore need to cal
 io.on("connection", (socket) => {           //listens to 'connection' event
     console.log(`User Connected: ${socket.id}`)
 
-    socket.on("join_room", (data) => {
+    socket.on("join_room", (data) => {      //events within " " have to match ones in clientside
         socket.join(data);
     })
 
