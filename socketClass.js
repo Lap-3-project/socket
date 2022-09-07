@@ -5,8 +5,8 @@ class Games {
         this.players = [];
     }
 
-    addQuiz(host, roomName, difficulty, count, subject) {
-        let quiz = {
+    addGame(host, roomName, difficulty, count, subject) {
+        let game = {
             host: host,
             room: roomName,
             difficult: difficulty,
@@ -16,10 +16,10 @@ class Games {
             active: false
         }
 
-        this.games.push(quiz);
+        this.games.push(game);
 
         this.games.forEach(room => console.log(room))
-        return quiz;
+        return game;
     }
 
     addPlayer (username, room, hostID) {
@@ -31,12 +31,12 @@ class Games {
         }
 
         this.players.push(player);
-        let quiz = this.games.find(y => y.room == room)
+        let game = this.games.find(y => y.room == room)
         try{
-          quiz.players.push(player) //push player user in players array
+          game.players.push(player) //push player user in players array
         } catch (err) {
             console.log(err);
-            return { error: err}
+            return { error: err};
         }
     }
 
@@ -44,6 +44,30 @@ class Games {
         let game = this.games.find( y => y.room == roomName);   //find game by roomName from constructor games[]
         return game;
     } 
+
+    joinRoom (roomName) {
+        console.log('finding room...');
+        const game = this.games.filter (game => {
+            console.log(game.room === roomName);
+            return game.room === roomName
+        });
+
+        if (game.length > 0) {
+            return game;
+        } else {
+            return 'Error. Room cannot be found.'
+        }
+    }
+
+    findGameRoom(roomName) {
+        this.games.forEach(game => console.log(game))
+        const game = this.games.filter(game => {
+            console.log(game.room === roomName);
+            return game.room === roomName;
+        })
+
+        return game;
+    }
 
 }
 

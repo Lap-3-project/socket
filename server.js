@@ -30,6 +30,7 @@ io.on("connection", socket => {
     socket.emit('assign-id', { id: socket.id });
 
     socket.on('join-server', (username) => {
+        //create user object
         const user = {
             username,
             id: socket.id
@@ -38,4 +39,28 @@ io.on("connection", socket => {
         users.push(user);
         io.emit("new users", users);
     })
+})
+
+//Creating the room
+socket.on ('add-config', (config, cb) => {
+    games.addGame (
+        config.host,
+        config.room,
+        config.difficulty,
+        config.count,
+        config.subject
+    );
+    socket.join(config.host);
+
+    games.addPlayer(
+        config.username,
+        config.room,
+        config.host
+    )
+
+    cb({
+        code: "success",
+        message: "SUCCESS: Creation successful. Config has been added"
+    })
+
 })
