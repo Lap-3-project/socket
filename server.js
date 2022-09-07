@@ -39,10 +39,9 @@ io.on("connection", socket => {
         users.push(user);
         io.emit("new users", users);
     })
-})
 
-//Creating the room
-socket.on ('add-config', (config, cb) => {
+    //Creating the room
+    socket.on ('add-config', (config, cb) => {
     games.addGame (
         config.host,
         config.room,
@@ -63,4 +62,47 @@ socket.on ('add-config', (config, cb) => {
         message: "SUCCESS: Creation successful. Config has been added"
     })
 
-})
+    })
+
+    socket.on ('join-room', (config, cb) => {
+        //Find the room first
+        console.log(config);
+        let findRoom = games.joinRoom(config.room);
+        console.log('join-room', findRoom);
+    
+        //if-else 
+        if (findRoom == 'ERROR') {
+            console.log('Room cannot be found')
+            const noRoom = 'Room does not exist';
+            io.to(config.id).emit('Room not found', noRoom);
+        } else {
+            console.log('adding player...')
+            games.addPlayer(
+                config.username,
+                config.room,
+                socket.id
+            );
+            socket.join(config.room);
+            socket.emit(`${config.username} has entered the room.`);
+            io.emit('new user', config.username)
+            let game = games.findGameRoom(config.room);
+    
+            cb({
+                code: 'success',
+                player: config.username,
+                score: 0
+            })
+    
+            io.to(game.host).emit("player-connected", {
+                name: config.username,
+                score: 0
+            });
+        }
+        
+    })
+
+});
+
+
+
+
