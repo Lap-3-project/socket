@@ -37,7 +37,7 @@ io.on("connection", socket => {
         }
         //Pushes users joined to users array and displays list of users
         users.push(user);
-        io.emit("new users", users);
+        io.emit("new-user", users);
     })
 
     //Creating the room
