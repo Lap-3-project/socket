@@ -10,22 +10,22 @@ const server = http.createServer(app);
 
 const {Games } = require('./socketClass');
 
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-})
-
 //create new game
 const games = new Games();
 
 //users array to store connected users who join
 let users = [];
 
+const io = new Server(server, {
+    cors: {
+        origin: "http://127.0.0.1:5173",    //client side url goes here
+        methods: ["GET", "POST"],
+    },
+})
+
 //connect to socket
-io.on("connection", socket => {
-    console.log(socket.id)
+io.on("connection", (socket) => {           //listens to 'connection' event
+    console.log(`User Connected: ${socket.id}`)
 
     socket.emit('assign-id', { id: socket.id });
 
@@ -103,6 +103,6 @@ io.on("connection", socket => {
 
 });
 
-
+module.exports = server;
 
 
